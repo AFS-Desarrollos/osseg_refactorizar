@@ -1,10 +1,11 @@
 import { loginToAPI, apiClient } from "../config/apiConfig";
 import { AfiliateFilter } from "../models/AfiliateFilter";
+import { QueryParams } from "../models/QueryParams";
 
 function transformText(text: string) {
   return text.toUpperCase().replace(/Ñ/g, "N").trim();
 }
-export async function getAfiliatesByQuery(afiliateFilter: AfiliateFilter) {
+export async function getAfiliatesByQuery(afiliateFilter: AfiliateFilter, queryParams: QueryParams) {
     const sessionId = await loginToAPI();
 
     let filters = [`CardCode eq 'C0987'`];
@@ -19,7 +20,7 @@ export async function getAfiliatesByQuery(afiliateFilter: AfiliateFilter) {
       filters = [`U_NroAfiliado eq '${transformText(afiliateFilter.afiliateNumber)}'`];
 
     const filterQuery = filters.join(" and ");
-    const url = `/sml.svc/VFCV_AUDI_PEDIDOSPRD?$filter=${filterQuery}&$top=${20}&$skip=${0}&$count=true`;
+    const url = `/sml.svc/VFCV_AUDI_PEDIDOSPRD?$filter=${filterQuery}&$top=${queryParams.limit}&$skip=${queryParams.skip}`;
 
     const headers = {
       Cookie: `B1SESSION=${sessionId}; CompanyDB=SBOAUDIFRPRDAR; ROUTEID=.node0`,

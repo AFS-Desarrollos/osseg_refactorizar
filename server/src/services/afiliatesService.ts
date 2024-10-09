@@ -1,38 +1,24 @@
-import { loginToAPI, apiClient } from "../config/apiConfig";
 import { AfiliateFilter } from "../models/AfiliateFilter";
+import { QueryParams } from "../models/QueryParams";
 import { getAfiliatesByQuery } from "../repositories/afiliateRepository";
 
-const sessionId = await loginToAPI();
-
-export async function getAfiliates(filters: {}) {
+export async function getAfiliates(payload: {}) {
   try {
-    const afiliateFilter = AfiliateFilter.from_json(filters);
+    const afiliateFilter = AfiliateFilter.from_json(payload);
+    const queryParams = QueryParams.from_json(payload);
 
-    const response = await getAfiliatesByQuery(afiliateFilter);
+    const response = await getAfiliatesByQuery(afiliateFilter, queryParams);
 
     if (response.status === 200) {
-      return { message: "Returning afiliates", data: response.data.value };
-    } 
+      const afiliates = response.data.value
+      const data = { count: afiliates.length, afiliates: afiliates }
+
+      return { message: "Returning afiliates", status: "success", data: data};
+    }
     else {
       throw new Error(`An error ocurred while trying to get the afiliates: ${response.status}`);
     }
   } catch (error: any) {
-    return { message: error.message };
+    return { message: error.message, status: "error" };
   }
 }
-
-// async function fetchAllPatientData(nombre, apellido, estado, nroAfiliado, sessionId) {
-//     const limit = 20;
-//     let skip = 0;
-//     let allData = [];
-//     let totalResults;
-
-//     //do {
-//         const data = await fetchPatientData(nombre, apellido, estado, nroAfiliado, sessionId, limit, skip);
-//         allData = allData.concat(data.value);
-//         totalResults = data['@odata.count'];
-//         skip += limit;
-//    // } while (skip < totalResults);
-
-//     return allData;
-// }

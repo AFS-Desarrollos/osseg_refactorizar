@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import { AfiliateFilter } from "./models/AfiliateFilter";
 import { getAfiliates } from "./services/afiliatesService";
 
 let claves = {
@@ -45,13 +44,14 @@ app.use(
 );
 app.use(express.json());
 
-
-app.post("/afiliates", async function (req, res) {
-  const filters = req.body;
-
-  res.json(await getAfiliates(filters));
-});
-
 app.listen(port, () => {
   console.log(`Server running on port: ${port}`);
 });
+
+
+app.post("/afiliates", async function (req, res) {
+  const payload = req.body;
+
+  res.json(await getAfiliates(payload));
+});
+

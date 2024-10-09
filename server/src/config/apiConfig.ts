@@ -1,8 +1,11 @@
 import axios from "axios";
+import dotenv from 'dotenv';
 import * as https from "https";
 
+dotenv.config({ path: './.env' });
+
 export const apiClient = axios.create({
-  baseURL: "https://app-afiliados.audifarmsalud.com:50000/b1s/v1",
+  baseURL: process.env.BASE_URL,
   headers: { "Content-Type": "application/json" },
   httpsAgent: new https.Agent({
     rejectUnauthorized: false,
@@ -10,9 +13,9 @@ export const apiClient = axios.create({
 });
 
 const loginParams = {
-  CompanyDB: "SBOAUDIFRPRDAR",
-  UserName: "blx",
-  Password: "Audi.2021",
+  CompanyDB: process.env.COMPANY_DB,
+  UserName: process.env.USER_NAME,
+  Password: process.env.PASSWORD,
 };
 
 export async function loginToAPI() {
