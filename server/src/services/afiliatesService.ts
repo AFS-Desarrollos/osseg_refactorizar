@@ -2,7 +2,7 @@ import { AfiliateFilter } from "../models/AfiliateFilter";
 import { QueryParams } from "../models/QueryParams";
 import { getAfiliatesByQuery } from "../repositories/afiliateRepository";
 
-export async function getAfiliates(payload: {}) {
+export async function getAfiliates(payload: any) {
   try {
     const afiliateFilter = AfiliateFilter.from_json(payload);
     const queryParams = QueryParams.from_json(payload);
@@ -11,7 +11,8 @@ export async function getAfiliates(payload: {}) {
 
     if (response.status === 200) {
       const afiliates = response.data.value
-      const data = { count: afiliates.length, afiliates: afiliates }
+      const count = response.data["@odata.count"]
+      const data = { count: count, afiliates: afiliates }
 
       return { message: "Returning afiliates", status: "success", data: data};
     }

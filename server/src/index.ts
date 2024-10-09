@@ -34,14 +34,23 @@ let claves = {
 const app = express();
 const port = 3002;
 
+const allowedOrigins = ["https://audifarmsalud.dev", "http://localhost:3000"];
+
 app.use(
   cors({
-    origin: "https://audifarmsalud.dev",
+    origin: (origin: any, callback) => {
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
+
 app.use(express.json());
 
 app.listen(port, () => {
@@ -54,4 +63,3 @@ app.post("/afiliates", async function (req, res) {
 
   res.json(await getAfiliates(payload));
 });
-

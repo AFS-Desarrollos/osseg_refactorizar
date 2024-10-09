@@ -4,7 +4,6 @@ import MainPage from "../Pages/MainPage.tsx";
 import TestNewPage from "../Pages/AfiliadosPage.tsx";
 
 const SiteRoutes = () => {
-  console.log("site routes")
   return (
     <Routes>
         <Route index element={<MainPage />} />
