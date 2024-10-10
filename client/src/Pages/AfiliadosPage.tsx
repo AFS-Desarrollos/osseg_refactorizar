@@ -113,7 +113,7 @@ export default function DataTable() {
           getRowId={(row) => row.id__}
           rows={afiliates}
           loading={isLoading}
-          rowCount={totalRows + 20}
+          rowCount={totalRows}
           columns={columns}
           disableColumnMenu
           disableColumnSorting

@@ -14,17 +14,17 @@ export async function getAfiliatesByQuery(afiliateFilter: AfiliateFilter, queryP
       filters.push(`startswith(U_NombrePaciente,'${transformText(afiliateFilter.name)}')`);
     if (afiliateFilter.lastname != null)
       filters.push(`contains(U_ApellidoPaciente,'${transformText(afiliateFilter.lastname)}')`);
-    if (afiliateFilter.state != null)
-      filters.push(`contains(ESTADO,'${transformText(afiliateFilter.state)}')`);
     if (afiliateFilter.afiliateNumber != null)
       filters = [`U_NroAfiliado eq '${queryParams.cardCode}%25${transformText(afiliateFilter.afiliateNumber)}'`];
+    if (afiliateFilter.state != null)
+      filters.push(`contains(ESTADO,'${transformText(afiliateFilter.state)}')`);
 
     const filterQuery = filters.join(" and ");
     const url = `/sml.svc/VFCV_AUDI_PEDIDOSPRD?$filter=${filterQuery}&$top=${queryParams.limit}&$skip=${queryParams.skip}&$count=true`;
 
     const headers = {
       Cookie: `B1SESSION=${sessionId}; CompanyDB=SBOAUDIFRPRDAR; ROUTEID=.node0`,
-      prefer: 'odata.maxpagesize=9999'
+      prefer: 'odata.maxpagesize=9999999999'
     }
 
     return await apiClient.get(url, { headers });

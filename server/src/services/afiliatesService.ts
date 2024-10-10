@@ -12,7 +12,8 @@ export async function getAfiliates(payload: any) {
     if (response.status === 200) {
       const afiliates = response.data.value
       const count = response.data["@odata.count"]
-      const data = { count: count, afiliates: afiliates }
+      const nextLink = response.data["@odata.count"]
+      const data = { count, nextLink, afiliates }
 
       return { message: "Returning afiliates", status: "success", data: data};
     }

@@ -13,7 +13,7 @@ export const StateAutocomplete: React.FC<StateAutocompleteProps> = ({ disabled =
     <Autocomplete
       disablePortal
       disabled={disabled}
-      options={["EN PREPARACIÓN", "EN TRANSITO", "DISPONIBLE", "DISPENSADO"]}
+      options={["EN PREPARACION", "EN TRANSITO", "DISPONIBLE", "DISPENSADO"]}
       sx={{ width: 300 }}
       renderInput={(params) => <TextField {...params} label="Estado" />}
       onChange={handleSelectionChange}

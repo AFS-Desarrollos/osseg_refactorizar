@@ -17,7 +17,7 @@ export const TextInput: React.FC<TextInput> = ({ disabled = false, label = "", h
       noValidate
       autoComplete="off"
     >
-      <TextField id="outlined-basic" label={label} variant="outlined" onChange={handleInputChange}/>
+      <TextField id="outlined-basic" label={label} variant="outlined" onChange={handleInputChange} disabled={disabled}/>
     </Box>
   );
 }
