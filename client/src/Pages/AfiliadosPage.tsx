@@ -1,17 +1,31 @@
 import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
-import { useGetAfiliadosQueryMutation } from "../Redux/api/AfiliadosApi.tsx";
-import { useEffect, useState } from "react";
+import { useGetAfiliadosQueryMutation } from "../Redux/api/AfiliatesApi.tsx";
+import { useContext, useEffect, useState } from "react";
 import { StateAutocomplete } from "../componentes/StateAutocomplete.tsx";
 import { TextInput } from "../componentes/TextInput.tsx";
-import { Box, textAlign } from "@mui/system";
+import { Box } from "@mui/system";
 import { Button } from "@mui/material";
+import { AuthContext } from "../auth.js";
+import { useCookies } from "react-cookie";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const columns: GridColDef[] = [
-  { field: "id__", headerName: "ID", width: 70},
-  { field: "DOCDATE_REM", headerName: "Fecha doc", width: 150, valueFormatter: (value: string) => value !== null ? value.split(' ')[0] : ""},
-  { field: "U_NroAfiliado", headerName: "Nro Afiliado", width: 150, valueFormatter: (value: string) => value.split('%')[1] },
+  { field: "id__", headerName: "ID", width: 70 },
+  {
+    field: "DOCDATE_REM",
+    headerName: "Fecha doc",
+    width: 150,
+    valueFormatter: (value: string) =>
+      value !== null ? value.split(" ")[0] : "",
+  },
+  {
+    field: "U_NroAfiliado",
+    headerName: "Nro Afiliado",
+    width: 150,
+    valueFormatter: (value: string) => value.split("%")[1],
+  },
   { field: "U_NombrePaciente", headerName: "Nombre", width: 260 },
   { field: "U_ApellidoPaciente", headerName: "Apellido", width: 220 },
   { field: "U_NOMBRE_FD", headerName: "Nombre FD", width: 350 },
@@ -34,6 +48,10 @@ export default function DataTable() {
   const [lastname, setLastname] = useState("");
   const [afiliateNumber, setAfiliateNumber] = useState("");
   const [state, setState] = useState("");
+  const [cookies, setCookies] = useCookies(["user"]);
+  const navigate = useNavigate();
+
+  const jwt = cookies.user || "not_sent";
 
   const handleNameChange = (event: any) => {
     setName(event.target.value);
@@ -61,7 +79,7 @@ export default function DataTable() {
     };
 
     try {
-      const response = await getAfiliates({filters}).unwrap();
+      const response = await getAfiliates({ filters, jwt }).unwrap();
       setCachedData((prev) => ({
         ...prev,
         [page]: response.data.afiliates,
@@ -69,7 +87,9 @@ export default function DataTable() {
       setAfiliates(response.data.afiliates);
       setTotalRows(response.data.count);
     } catch (error) {
-      console.error("Error fetching afiliates:", error);
+      if (error.status === 400 || error.status === 500) {
+        navigate("/");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -97,14 +117,24 @@ export default function DataTable() {
           justifyContent="center"
           gap={2}
         >
-          <TextInput label="Nombre" handleInputChange={handleNameChange} disabled={!!afiliateNumber}/>
-          <TextInput label="Apellido" handleInputChange={handleLastnameChange} disabled={!!afiliateNumber}/>
+          <TextInput
+            label="Nombre"
+            handleInputChange={handleNameChange}
+            disabled={!!afiliateNumber}
+          />
+          <TextInput
+            label="Apellido"
+            handleInputChange={handleLastnameChange}
+            disabled={!!afiliateNumber}
+          />
           <TextInput
             label="Nro Afiliado"
             handleInputChange={handleAfiliateNumberChange}
           />
           <StateAutocomplete handleSelectionChange={handleStateChange} />
-          <Button variant="outlined" onClick={fetchAfiliates}>Buscar</Button>
+          <Button variant="outlined" onClick={fetchAfiliates}>
+            Buscar
+          </Button>
         </Box>
       </Paper>
 

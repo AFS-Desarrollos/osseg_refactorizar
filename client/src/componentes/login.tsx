@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CSSProperties } from "react";
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase..js';
-import { useNavigate } from 'react-router-dom';
-
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase.tsx";
+import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 const Input = ({ label, type, value, onChange }) => {
   return (
@@ -32,12 +32,22 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [items, setItems] = useState([]);
+  const [cookies, setCookie] = useCookies(["user"]);
 
-  const handleSubmitLogin = async (e)=> {
+  useEffect(() => {
+    localStorage.setItem("items", JSON.stringify(items));
+  }, [items]);
+
+  const handleSubmitLogin = async (e) => {
     e.preventDefault();
     try {
-      console.log(await signInWithEmailAndPassword(auth, email, password));
-      navigate("/afiliados")
+      const user = await signInWithEmailAndPassword(auth, email, password);
+      setCookie("user", await user.user.getIdToken(), {
+        path: "/",
+        maxAge: 1728588542417,
+      });
+      navigate("/afiliates");
     } catch (error) {
       console.error(error);
     }

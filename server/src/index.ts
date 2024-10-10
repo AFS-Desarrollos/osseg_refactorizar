@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import { getAfiliates } from "./services/afiliatesService";
+import { admin } from './firebase/firebase';
+import { HttpStatusCode } from "axios";
 
 let claves = {
   "agarcia@osseg.org.ar": "Alejandra.2024",
@@ -59,7 +61,16 @@ app.listen(port, () => {
 
 
 app.post("/afiliates", async function (req, res) {
+  const jwt = req.headers.authorization || "not_sent"
   const payload = req.body;
+  try {
+    const user = await admin.auth().verifyIdToken(jwt);
 
-  res.json(await getAfiliates(payload));
+    console.log(user)
+
+    res.json(await getAfiliates(payload));
+  } catch (error) {
+    res.statusCode = HttpStatusCode.BadRequest
+    res.json({message: "failed to fetch afiliates", status: "error"},)
+  }
 });

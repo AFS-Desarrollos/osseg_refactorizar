@@ -1,14 +1,16 @@
 {
-    "compilerOptions": {
-      "module": "ESNext", 
-      "target": "ESNext",
-      "esModuleInterop": true,
-      "skipLibCheck": true,
-      "strict": true,
-      "outDir": "./dist",
-      "rootDir": "./src"
-    },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules"]
-  }
-  
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ESNext",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true, 
+    "skipLibCheck": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "forceConsistentCasingInFileNames": true 
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}

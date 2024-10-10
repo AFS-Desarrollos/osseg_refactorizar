@@ -1,14 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { afiliadosApi } from "./AfiliadosApi.tsx";
+import { afiliatesApi } from "./AfiliatesApi.tsx";
 
 export const store = configureStore({
     reducer: {
-      [afiliadosApi.reducerPath]: afiliadosApi.reducer,
+      [afiliatesApi.reducerPath]: afiliatesApi.reducer,
     },
     //@ts-ignore
     devTools: process.env.NODE_ENV === 'development',
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({}).concat([
-        afiliadosApi.middleware,
+        afiliatesApi.middleware,
       ]),
   });
